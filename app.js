@@ -18,7 +18,7 @@ async function main() {
     rabbitSendMessage(event);
   });
 
-  await twict.listen(process.env.PORT || 3001);
+  await twict.listen(process.env.PORT || 3000);
 }
 
 main();
