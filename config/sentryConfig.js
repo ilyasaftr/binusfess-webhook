@@ -1,5 +1,4 @@
 const Sentry = require('@sentry/node');
-const Tracing = require('@sentry/tracing');
 
 function sentryInit() {
   Sentry.init({
@@ -12,18 +11,4 @@ function sentryInit() {
   });
 }
 
-function sentryStartTransaction(transactionName, op) {
-  Sentry.configureScope((scope) => {
-    scope.setTransactionName(transactionName);
-    scope.setTag('transaction_op', op);
-    scope.startTransaction();
-  });
-  Tracing.startTransaction({ name: transactionName, op });
-}
-
-function sentryEndTransaction() {
-  Sentry.finishTransaction();
-  Tracing.finishTransaction();
-}
-
-module.exports = { sentryInit, sentryStartTransaction, sentryEndTransaction };
+module.exports = { sentryInit };

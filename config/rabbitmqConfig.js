@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const Sentry = require('./sentryConfig');
 
 const queueName = process.env.RABBITMQ_QUEUE_NAME;
 const options = {
@@ -19,10 +20,11 @@ async function rabbitSendMessage(message) {
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: false });
     await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    console.log(`Sent JSON message to queue: ${JSON.stringify(message)}`);
+    console.log('Sent message to queue');
     await channel.close();
   } catch (err) {
-    console.error(`Error occurred while sending JSON message: ${err}`);
+    Sentry.captureException(err);
+    console.log(`Error occurred while sending message: ${err}\n`);
   }
 }
 
