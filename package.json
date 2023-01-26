@@ -1,0 +1,23 @@
+{
+  "name": "binusfess-webhook",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@sentry/node": "^7.33.0",
+    "@sentry/tracing": "^7.33.0",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "twict": "^0.0.12"
+  },
+  "devDependencies": {
+    "eslint": "^8.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
