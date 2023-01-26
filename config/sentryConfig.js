@@ -10,10 +10,6 @@ function sentryInit() {
   Sentry.configureScope((scope) => {
     scope.setTag('environment', process.env.NODE_ENV);
   });
-
-  Tracing.init({
-    tracesSampleRate: process.env.SENTRY_TRACING_RATE,
-  });
 }
 
 function sentryStartTransaction(transactionName, op) {
