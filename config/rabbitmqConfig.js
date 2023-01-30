@@ -1,7 +1,6 @@
 const amqp = require('amqplib');
 const Sentry = require('./sentryConfig');
 
-const queueName = process.env.RABBITMQ_QUEUE_NAME;
 const options = {
   credentials: amqp.credentials.plain(process.env.RABBITMQ_USERNAME, process.env.RABBITMQ_PASSWORD),
 };
@@ -14,7 +13,7 @@ async function rabbitConnect() {
   }
 }
 
-async function rabbitSendMessage(message) {
+async function rabbitSendMessage(queueName, message) {
   try {
     await rabbitConnect();
     const channel = await connection.createChannel();
