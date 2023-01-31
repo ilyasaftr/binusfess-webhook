@@ -10,4 +10,8 @@ function sentryInit() {
   });
 }
 
-module.exports = { sentryInit };
+function sentryCapture(err) {
+  Sentry.captureException(err);
+}
+
+module.exports = { sentryInit, sentryCapture };

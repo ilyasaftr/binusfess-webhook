@@ -7,36 +7,33 @@ async function main() {
   sentryInit(process.env.SENTRY_DSN);
 
   twict.onDirectMessage((event) => {
-    if (process.env.NODE_ENV != "production") {
-      console.log('[Triggered] event_directMessage')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Triggered] event_directMessage');
+      console.log(event);
     }
-
-    console.log(`[Triggered] ${process.env.NODE_ENV} event_directMessage`)
 
     rabbitSendMessage('event_directMessage', event);
   });
 
   twict.onFollow((event) => {
-    if (process.env.NODE_ENV != "production") {
-      console.log('[Triggered] event_follow')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Triggered] event_follow');
+      console.log(event);
     }
-
-    console.log(`[Triggered] ${process.env.NODE_ENV} event_follow`)
 
     rabbitSendMessage('event_follow', event);
   });
 
   twict.onTweetCreate((event) => {
-    if (process.env.NODE_ENV != "production") {
-      console.log('[Triggered] event_tweetCreate')
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Triggered] event_tweetCreate');
+      console.log(event);
     }
-
-    console.log(`[Triggered] ${process.env.NODE_ENV} event_tweetCreate`)
 
     rabbitSendMessage('event_tweetCreate', event);
   });
 
-  await twict.listen(process.env.PORT || 3000);
+  await twict.listen(process.env.SERVER_PORT || 3001);
 }
 
 main();
