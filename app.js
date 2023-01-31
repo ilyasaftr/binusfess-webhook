@@ -11,6 +11,8 @@ async function main() {
       console.log('[Triggered] event_directMessage')
     }
 
+    console.log(`[Triggered] ${process.env.NODE_ENV} event_directMessage`)
+
     rabbitSendMessage('event_directMessage', event);
   });
 
@@ -19,6 +21,8 @@ async function main() {
       console.log('[Triggered] event_follow')
     }
 
+    console.log(`[Triggered] ${process.env.NODE_ENV} event_follow`)
+
     rabbitSendMessage('event_follow', event);
   });
 
@@ -26,6 +30,8 @@ async function main() {
     if (process.env.NODE_ENV != "production") {
       console.log('[Triggered] event_tweetCreate')
     }
+
+    console.log(`[Triggered] ${process.env.NODE_ENV} event_tweetCreate`)
 
     rabbitSendMessage('event_tweetCreate', event);
   });
