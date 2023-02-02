@@ -6,10 +6,37 @@ const options = {
 };
 
 let connection;
+let isConnected = false;
 
 async function rabbitConnect() {
-  if (!connection) {
-    connection = await amqp.connect(`amqp://${process.env.RABBITMQ_HOSTNAME}/${process.env.RABBITMQ_VIRTUALHOST}`, options);
+  try {
+    if (!isConnected) {
+      connection = await amqp.connect(`amqp://${process.env.RABBITMQ_HOSTNAME}/${process.env.RABBITMQ_VIRTUALHOST}`, options);
+      connection.on('close', () => {
+        isConnected = false;
+        console.error('[RabbitMQ] RabbitMQ connection closed, attempting to reconnect...');
+        rabbitConnect();
+      });
+      connection.on('error', (error) => {
+        isConnected = false;
+        console.error(`[RabbitMQ] RabbitMQ connection error: ${error}`);
+        rabbitConnect();
+      });
+      connection.on('blocked', (reason) => {
+        console.error(`[RabbitMQ] RabbitMQ connection blocked due to: ${reason}`);
+      });
+      connection.on('unblocked', () => {
+        console.log('[RabbitMQ] RabbitMQ connection unblocked');
+      });
+
+      isConnected = true;
+      console.log('[RabbitMQ] Successfully connected to RabbitMQ');
+    }
+  } catch (error) {
+    sentryCapture(error);
+    isConnected = false;
+    console.error(`[RabbitMQ] Error connecting to RabbitMQ: ${error}`);
+    setTimeout(rabbitConnect, 5000);
   }
 }
 
@@ -19,11 +46,11 @@ async function rabbitSendMessage(queueName, message) {
     const channel = await connection.createChannel();
     await channel.assertQueue(queueName, { durable: false });
     await channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
-    console.log('Sent message to queue');
+    console.log('[RabbitMQ] Sent message to queue');
     await channel.close();
   } catch (err) {
     sentryCapture(err);
-    console.log(`Error occurred while sending message: ${err}\n`);
+    console.log(`[RabbitMQ] Error occurred while sending message: ${err}\n`);
   }
 }
 
